@@ -7,8 +7,8 @@ import (
 	"strings"
 )
 
-func GetPathSize(path string, human, all, recursive bool) (string, error) {
-	size, err := getSize(path, all, recursive)
+func GetPathSize(path string, recursive, human, all bool) (string, error) {
+	size, err := GetSize(path, recursive, all)
 	if err != nil {
 		return "", err
 	}
@@ -16,7 +16,7 @@ func GetPathSize(path string, human, all, recursive bool) (string, error) {
 	return formatSize(size, human), nil
 }
 
-func getSize(path string, all, recursive bool) (int64, error) {
+func GetSize(path string, recursive, all bool) (int64, error) {
 	info, err := os.Lstat(path)
 	if err != nil {
 		return 0, err
@@ -44,7 +44,7 @@ func getSize(path string, all, recursive bool) (int64, error) {
 		entryPath := filepath.Join(path, entry.Name())
 
 		if entry.IsDir() {
-			dirSize, err := getSize(entryPath, all, recursive)
+			dirSize, err := GetSize(entryPath, recursive, all)
 			if err != nil {
 				return 0, err
 			}
